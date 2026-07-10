@@ -1,4 +1,4 @@
-import { cases } from './data.js';
+﻿import { cases } from './data.js';
 
 const TAB_SLOTS = ['4%', '23%', '42%', '61%', '78%'];
 const TAB_COLORS = ['#d8c39a', '#e8c4a0', '#d4b8a0', '#c9c4a0', '#c4d4a0', '#a8c4d4'];
@@ -11,6 +11,20 @@ function hashString(str) {
     h = (h * 31 + str.charCodeAt(i)) % 1000000;
   }
   return h;
+}
+
+function seededJitter(id) {
+  const h1 = hashString(`${id}:x`);
+  const h2 = hashString(`${id}:y`);
+  const h3 = hashString(`${id}:r`);
+  return {
+    jx: (h1 % 15) - 7,
+    jy: (h2 % 9) - 4,
+    jr: ((h3 % 33) - 16) / 10,
+    tabR: (((h1 >> 3) % 21) - 10) / 10,
+    shade: 0.95 + (h1 % 11) / 100,
+    sat: 0.92 + (h2 % 17) / 100
+  };
 }
 
 function escapeHtml(text) {
@@ -27,14 +41,22 @@ function renderFolders() {
     const hash = hashString(c.id);
     const tabPos = TAB_SLOTS[hash % TAB_SLOTS.length];
     const tabColor = c.color || TAB_COLORS[hash % TAB_COLORS.length];
+    const jitter = seededJitter(c.id);
 
     const item = document.createElement('div');
     item.className = 'folder-item';
     item.setAttribute('role', 'listitem');
     item.setAttribute('tabindex', '0');
-    item.style.setProperty('--i', (count - 1 - i));
+    item.style.setProperty('--i', i);
+    item.style.setProperty('--front', count - 1 - i);
     item.style.setProperty('--tab-pos', tabPos);
     item.style.setProperty('--tab-color', tabColor);
+    item.style.setProperty('--jx', `${jitter.jx}px`);
+    item.style.setProperty('--jy', `${jitter.jy}px`);
+    item.style.setProperty('--jr', `${jitter.jr}deg`);
+    item.style.setProperty('--tab-r', `${jitter.tabR}deg`);
+    item.style.setProperty('--shade', jitter.shade);
+    item.style.setProperty('--sat', jitter.sat);
 
     item.innerHTML = `
       <div class="tab">${escapeHtml(c.name)}</div>
@@ -54,13 +76,18 @@ function renderFolders() {
 function pushUpperFolders(hovered) {
   let hit = false;
   document.querySelectorAll('.folder-item').forEach(el => {
-    if (el === hovered) hit = true;
-    else if (!hit) el.classList.add('pushed');
+    el.classList.remove('pushed', 'revealed');
+    if (el === hovered) {
+      hit = true;
+      el.classList.add('revealed');
+    } else if (!hit) {
+      el.classList.add('pushed');
+    }
   });
 }
 
 function resetFolders() {
-  document.querySelectorAll('.folder-item').forEach(el => el.classList.remove('pushed'));
+  document.querySelectorAll('.folder-item').forEach(el => el.classList.remove('pushed', 'revealed'));
 }
 
 function buildGlossaryMap(glossary) {
@@ -186,7 +213,7 @@ function openCase(c) {
     <div class="file-body">
       ${(c.body || []).map(p => `<p>${linkGlossary(p, glossaryMap)}</p>`).join('')}
     </div>
-    ${(c.quotes || []).map(q => `<blockquote class="quote">${escapeHtml(q.text)}<cite>— ${escapeHtml(q.who)}</cite></blockquote>`).join('')}
+    ${(c.quotes || []).map(q => `<blockquote class="quote">${escapeHtml(q.text)}<cite>&mdash; ${escapeHtml(q.who)}</cite></blockquote>`).join('')}
     ${renderEvidence(c.evidence, glossaryMap)}
     ${renderQuiz(c.quiz)}
     ${renderTeaching(c.teaching)}
