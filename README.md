@@ -4,8 +4,19 @@ A static, filing-cabinet-style site for AP Cybersecurity case studies. Inspired 
 
 ## Live Site
 
-- **Production**: TBD — deploy to Cloudflare Pages
+- **Production**: https://cyber.ton-ton.fun/
+- **GitHub Pages fallback**: https://stoic42.github.io/ap-cybersecurity-casefiles/
 - **Local preview**: open `index.html` in any modern browser
+
+## Custom Domain Setup
+
+The site uses GitHub Pages with a custom domain. To activate it:
+
+1. In your DNS provider for `ton-ton.fun`, add a **CNAME** record:
+   - **Name**: `cyber`
+   - **Value**: `Stoic42.github.io`
+2. Wait for DNS propagation (usually a few minutes, up to 24 hours).
+3. GitHub will automatically provision an HTTPS certificate once the CNAME resolves.
 
 ## Project Structure
 
@@ -15,8 +26,9 @@ ap-cybersecurity-casefiles/
 ├── app.js          # Rendering and interactions
 ├── data.js         # Case-study content
 ├── icons.js        # SVG icon paths
+├── CNAME           # Custom domain config for GitHub Pages
 ├── README.md       # This file
-└── _headers        # Cloudflare Pages headers
+└── _headers        # Security headers (Cloudflare Pages ready)
 ```
 
 ## Content Model
@@ -47,7 +59,9 @@ Each case in `data.js` follows this schema:
 }
 ```
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Pages (optional)
+
+If you later prefer Cloudflare Pages:
 
 1. Push this folder to a GitHub repository.
 2. In Cloudflare Dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
@@ -57,11 +71,17 @@ Each case in `data.js` follows this schema:
    - Build output directory: `/`
 4. Save and deploy.
 
-For a custom domain, add it under **Custom domains** and point a CNAME record to `<project>.pages.dev`.
-
 ## Source Cases
 
 Cases are drawn from Desal’s AP Cybersecurity Memory Wiki (`memory/synthesis/apsi-*`) and public incident reports. Each case includes AP unit/topic alignment, glossary terms, evidence, a quiz, and source URLs.
+
+### Current case list (12)
+
+- **Unit 1**: Change Healthcare
+- **Unit 2**: MGM Resorts · HK Deepfake CFO (Arup) · Industroyer · SignalGate
+- **Unit 3**: AWS US-EAST-1 outage · NotPetya · Mirai
+- **Unit 4**: Log4Shell · MOVEit · Bandai Channel
+- **Unit 5**: LastPass
 
 ## License
 

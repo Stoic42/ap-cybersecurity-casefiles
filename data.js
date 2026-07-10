@@ -611,5 +611,111 @@ export const cases = [
       'https://blog.lastpass.com/2022/12/notice-of-recent-security-incident/',
       'https://www.cisa.gov/news-events/news/lastpass-data-breach'
     ]
+  },
+
+  {
+    id: 'bandai-channel',
+    name: 'Bandai Channel',
+    fullName: 'Bandai Channel ChatGPT Attack 2025',
+    tag: 'Unit 4 · Authentication · AI-Assisted Exploit',
+    color: '#9b59b6',
+    unit: 4,
+    topic: '4.1–4.4 / 2.1B',
+    dilemma: 'A teenager asked ChatGPT for help and cancelled 46,000 subscriptions. Is the bug, the bot, or the boy to blame?',
+    body: [
+      'In November 2025, a 15-year-old high school student in Saitama, Japan, exploited a flaw in Bandai Channel, a popular anime streaming service operated by Bandai Namco Filmworks. By analyzing the service’s network traffic, he discovered an authentication weakness that let him issue account-management commands without proper credentials.',
+      'The student used ChatGPT to help write a program that sent false cancellation requests to Bandai Channel’s servers. Between 5 p.m. and 8:46 p.m. on November 4, the program cancelled 46,812 paid subscriptions. The platform suspended service on November 6 and remained offline for roughly a month while repairs were made.',
+      'Bandai Namco later disclosed that personal information from up to 1.36 million accounts—including email addresses, account balances, and payment methods—may have been exposed. The company tried blocking the attacker’s IP address, but he evaded the blocks by changing his IP about 30 times.',
+      'The student was first arrested in June 2026 on suspicion of unauthorized computer access and then re-arrested in July 2026 for obstruction of business. He told investigators he held no grudge against the company; he simply enjoyed analyzing network traffic and found the service vulnerable.',
+      'The case is a compact example of how generative AI can accelerate exploitation, why authentication and input validation are critical, and why IP blocking alone is not enough to stop a determined attacker.'
+    ],
+    quotes: [
+      {
+        text: 'I created the source code for the withdrawal process myself. Since the processing was taking a long time, I asked ChatGPT and completed it in a different programming language.',
+        who: 'Suspect statement to Tokyo Metropolitan Police, July 2026'
+      }
+    ],
+    evidence: [
+      {
+        type: 'stats',
+        title: 'Impact',
+        stats: [
+          { value: '46,812', label: 'subscriptions cancelled' },
+          { value: '1.36M', label: 'accounts possibly exposed' },
+          { value: '~1 month', label: 'service suspension' },
+          { value: '~30', label: 'IP address changes' }
+        ]
+      },
+      {
+        type: 'table',
+        title: 'AP Topic 4.2 — Authentication Failures',
+        headers: ['Control', 'What went wrong'],
+        rows: [
+          ['Credential verification', 'Requests could trigger account actions without valid ID/password'],
+          ['Session management', 'No strong session tokens or authorization checks on sensitive endpoints'],
+          ['Input validation', 'Server accepted forged cancellation requests'],
+          ['Rate limiting', 'Tens of thousands of cancellation requests were processed in hours'],
+          ['Evasion control', 'IP blocks were bypassed by rotating addresses']
+        ]
+      },
+      {
+        type: 'table',
+        title: 'Attack Chain',
+        headers: ['Phase', 'Event'],
+        rows: [
+          ['Reconnaissance', 'Analyzed Bandai Channel network traffic'],
+          ['Weaponization', 'Used ChatGPT to help build the cancellation program'],
+          ['Exploitation', 'Sent forged requests via the authentication flaw'],
+          ['Action', 'Cancelled 46,812 accounts'],
+          ['Evasion', 'Changed IP ~30 times to avoid blocking']
+        ]
+      }
+    ],
+    glossary: [
+      { en: 'authentication bypass', zh: '认证绕过', def: 'A vulnerability or technique that lets an attacker access a system or perform actions without providing valid credentials.' },
+      { en: 'input validation', zh: '输入验证', def: 'Checking that data sent to a server is well-formed, expected, and authorized before processing it.' },
+      { en: 'rate limiting', zh: '速率限制', def: 'Restricting how many requests a single user or IP can make in a given time to prevent abuse.' },
+      { en: 'session management', zh: '会话管理', def: 'The processes that track authenticated users and enforce what they are allowed to do.' },
+      { en: 'unauthorized access', zh: '未经授权访问', def: 'Gaining access to a system or data without permission.' },
+      { en: 'generative AI', zh: '生成式人工智能', def: 'AI systems that can produce text, code, images, or other content based on prompts.' }
+    ],
+    quiz: [
+      {
+        q: 'What was the primary technical weakness exploited in the Bandai Channel attack?',
+        choices: ['Weak user passwords', 'An authentication flaw allowing actions without valid credentials', 'A DDoS flood', 'A phishing email to employees'],
+        correct: 1,
+        explain: 'The student found an authentication/session flaw that let him send account-cancellation requests without proper credentials.'
+      },
+      {
+        q: 'How did ChatGPT contribute to the incident?',
+        choices: ['It discovered the vulnerability automatically', 'It helped rewrite/complete the cancellation program', 'It blocked the attacker’s IP address', 'It notified Bandai Namco of the breach'],
+        correct: 1,
+        explain: 'The suspect wrote the initial logic but used ChatGPT to complete the program in another language and speed up processing.'
+      },
+      {
+        q: 'Why did blocking the attacker’s IP address fail?',
+        choices: ['The attacker used a VPN and changed IPs repeatedly', 'The server had no firewall', 'The attacker stole admin credentials', 'The blocks were never applied'],
+        correct: 0,
+        explain: 'The student changed his IP address roughly 30 times, allowing him to continue sending cancellation requests.'
+      },
+      {
+        q: 'Which AP Cybersecurity unit is the strongest fit for this case?',
+        choices: ['Unit 1 only', 'Unit 2 only', 'Unit 4, with Unit 2 and Unit 5 angles', 'Unit 5 only'],
+        correct: 2,
+        explain: 'The core issue is authentication/software security (Unit 4), but it also involves adversary types (Unit 2) and legal/ethical questions (Unit 5).'
+      }
+    ],
+    teaching: {
+      hook: 'Ask students: “Have you ever asked ChatGPT to write code for you? What if that code could cancel 46,000 paid subscriptions in one evening?”',
+      localization: 'Connect to Bilibili, Netflix, or Spotify account sharing. What would happen if a bug let anyone cancel your subscription or view your payment method?',
+      posterLayout: 'Left: vulnerability chain (traffic analysis → auth bypass → mass deregistration). Right: defense checklist (strong auth, rate limiting, input validation, logging). Bottom: AI ethics triangle — tool, user, platform.',
+      apAlignment: 'Primary: Unit 4.1 system vulnerabilities, 4.2 authentication/access control, 4.3 secure software design, 4.4 safe computing. Secondary: Unit 2.1B adversary types; Unit 5 legal/ethical implications.'
+    },
+    sources: [
+      'https://mp.weixin.qq.com/s/xHxxkEWtdTb_D3hlUWOxQQ?scene=1',
+      'https://www.asahi.com/ajw/articles/16703618',
+      'https://www.japantimes.co.jp/news/2026/07/06/japan/crime-legal/boy-arrest-bandai-video/',
+      'https://therecord.media/japanese-teen-arrested-over-attack-disrupted-streaming-service'
+    ]
   }
 ];
